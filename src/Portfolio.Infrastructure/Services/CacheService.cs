@@ -30,8 +30,8 @@ public class CacheService : ICacheService
             AbsoluteExpirationRelativeToNow = expiration ?? TimeSpan.FromMinutes(30)
         };
 
-        var data = JsonSerializer.Serialize(value, _jsonOptions);
-        await _cache.SetStringAsync(key, data, options, cancellationToken);
+        var json = JsonSerializer.Serialize(value, _jsonOptions);
+        await _cache.SetStringAsync(key, json, options, cancellationToken);
     }
 
     public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
@@ -42,19 +42,23 @@ public class CacheService : ICacheService
     public async Task RemoveByPatternAsync(string pattern, CancellationToken cancellationToken = default)
     {
         // Redis implementation required for pattern matching
-        // For in-memory cache, this is not supported directly
+        await Task.CompletedTask;
+    }
+
+    public async Task RemoveByPrefixAsync(string prefix, CancellationToken cancellationToken = default)
+    {
+        // Redis implementation required for prefix matching
         await Task.CompletedTask;
     }
 
     public async Task ClearAsync(CancellationToken cancellationToken = default)
     {
-        // Requires custom implementation or Redis FLUSHDB
         await Task.CompletedTask;
     }
 
     public async Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default)
     {
-        var data = await _cache.GetAsync(key, cancellationToken);
-        return data != null;
+        var data = await _cache.GetStringAsync(key, cancellationToken);
+        return !string.IsNullOrEmpty(data);
     }
 }

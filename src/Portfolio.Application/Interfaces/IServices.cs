@@ -106,6 +106,11 @@ public interface ICacheService
     /// Anahtarın cache'de olup olmadığını kontrol eder.
     /// </summary>
     Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Prefix ile cache siler.
+    /// </summary>
+    Task RemoveByPrefixAsync(string prefix, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -188,7 +193,12 @@ public interface ISlugService
     /// <summary>
     /// Slug'ın benzersiz olup olmadığını kontrol eder.
     /// </summary>
-    Task<string> GenerateUniqueSlugAsync<T>(string text, CancellationToken cancellationToken = default) where T : class;
+    Task<string> GenerateUniqueSlugAsync<T>(string text, int? excludeId = null, CancellationToken cancellationToken = default) where T : class;
+    
+    /// <summary>
+    /// Slug'ın benzersiz olup olmadığını kontrol eder.
+    /// </summary>
+    Task<bool> IsSlugUniqueAsync<T>(string slug, int? excludeId = null, CancellationToken cancellationToken = default) where T : class;
 }
 
 /// <summary>
@@ -218,24 +228,127 @@ public interface IHealthCheckService
 }
 
 /// <summary>
-/// Sağlık durumu.
+/// Proje servisi arayüzü.
 /// </summary>
-public class HealthStatus
+public interface IProjectService
 {
-    public bool IsHealthy { get; set; }
-    public string Status { get; set; } = string.Empty;
-    public DateTime CheckedAt { get; set; } = DateTime.UtcNow;
-    public Dictionary<string, HealthCheckResult> Checks { get; set; } = new();
+    /// <summary>
+    /// ID ile proje getirir.
+    /// </summary>
+    Task<Project?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Tüm projeleri getirir.
+    /// </summary>
+    Task<IEnumerable<Project>> GetAllAsync(bool includeInactive = false, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Sayfalı proje listesi getirir.
+    /// </summary>
+    Task<(IEnumerable<Project> Items, int TotalCount)> GetPagedAsync(
+        int pageNumber = 1,
+        int pageSize = 10,
+        string? searchTerm = null,
+        int? categoryId = null,
+        bool? isFeatured = null,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Yeni proje oluşturur.
+    /// </summary>
+    Task<Project> CreateAsync(Project project, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Projeyi günceller.
+    /// </summary>
+    Task<Project> UpdateAsync(Project project, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Projeyi siler.
+    /// </summary>
+    Task DeleteAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Kategoriye göre projeleri getirir.
+    /// </summary>
+    Task<IEnumerable<Project>> GetByCategoryAsync(int categoryId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Öne çıkan projeleri getirir.
+    /// </summary>
+    Task<IEnumerable<Project>> GetFeaturedAsync(int count = 6, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Slug'ın benzersiz olup olmadığını kontrol eder.
+    /// </summary>
+    Task<bool> ExistsBySlugAsync(string slug, int? excludeId = null, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
-/// Sağlık kontrol sonucu.
+/// Mesaj servisi arayüzü.
 /// </summary>
-public class HealthCheckResult
+public interface IMessageService
 {
-    public bool IsHealthy { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public TimeSpan? ResponseTime { get; set; }
-    public string? ErrorMessage { get; set; }
+    /// <summary>
+    /// Yeni mesaj oluşturur.
+    /// </summary>
+    Task<Message> CreateAsync(Message message, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// ID ile mesaj getirir.
+    /// </summary>
+    Task<Message?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Sayfalı mesaj listesi getirir.
+    /// </summary>
+    Task<(IEnumerable<Message> Items, int TotalCount)> GetPagedAsync(
+        int pageNumber = 1,
+        int pageSize = 20,
+        string? searchTerm = null,
+        MessageStatus? status = null,
+        bool? isRead = null,
+        DateTime? startDate = null,
+        DateTime? endDate = null,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Mesajı okundu olarak işaretler.
+    /// </summary>
+    Task MarkAsReadAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Mesajı okunmadı olarak işaretler.
+    /// </summary>
+    Task MarkAsUnreadAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Mesajı arşivler.
+    /// </summary>
+    Task ArchiveAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Mesajı siler.
+    /// </summary>
+    Task DeleteAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Okunmamış mesaj sayısını döner.
+    /// </summary>
+    Task<int> GetUnreadCountAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Son mesajları getirir.
+    /// </summary>
+    Task<IEnumerable<Message>> GetRecentAsync(int count = 10, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Mesajları CSV olarak dışa aktarır.
+    /// </summary>
+    Task ExportToCsvAsync(IEnumerable<Message> messages, Stream output, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Yöneticiye bildirim e-postası gönderir.
+    /// </summary>
+    Task SendNotificationAsync(Message message, string adminEmail, CancellationToken cancellationToken = default);
 }
