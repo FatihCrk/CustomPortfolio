@@ -1,125 +1,136 @@
 using System.Net;
 using System.Net.Mail;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Portfolio.Domain.Interfaces;
-using Portfolio.Shared.DTOs.Email;
+using Microsoft.Extensions.Options;
+using Portfolio.Application.Interfaces;
 
 namespace Portfolio.Infrastructure.Services;
 
+public class EmailSettings
+{
+    public string SmtpServer { get; set; } = string.Empty;
+    public int SmtpPort { get; set; } = 587;
+    public string SenderEmail { get; set; } = string.Empty;
+    public string SenderName { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public bool EnableSsl { get; set; } = true;
+}
+
 public class EmailService : IEmailService
 {
-    private readonly IConfiguration _configuration;
+    private readonly EmailSettings _settings;
     private readonly ILogger<EmailService> _logger;
-    private readonly SmtpSettings _smtpSettings;
 
-    public EmailService(IConfiguration configuration, ILogger<EmailService> logger)
+    public EmailService(IOptions<EmailSettings> settings, ILogger<EmailService> logger)
     {
-        _configuration = configuration;
+        _settings = settings.Value;
         _logger = logger;
-        _smtpSettings = _configuration.GetSection("SmtpSettings").Get<SmtpSettings>() ?? new SmtpSettings();
     }
 
-    public async Task SendEmailAsync(EmailRequestDto request)
+    public async Task SendEmailAsync(string to, string subject, string body, CancellationToken cancellationToken = default)
     {
-        if (!_smtpSettings.IsEnabled)
+        if (string.IsNullOrEmpty(_settings.SmtpServer))
         {
-            _logger.LogWarning("SMTP is disabled. Email not sent to {Email}", request.To);
+            _logger.LogWarning("SMTP ayarları yapılandırılmamış. E-posta gönderilmedi: {To}", to);
             return;
         }
 
         try
         {
-            using var client = new SmtpClient(_smtpSettings.Host, _smtpSettings.Port)
+            using var message = new MailMessage
             {
-                Credentials = new NetworkCredential(_smtpSettings.Username, _smtpSettings.Password),
-                EnableSsl = _smtpSettings.EnableSsl,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false
+                From = new MailAddress(_settings.SenderEmail, _settings.SenderName),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
             };
 
-            var mailMessage = new MailMessage
+            message.To.Add(to);
+
+            using var client = new SmtpClient(_settings.SmtpServer, _settings.SmtpPort)
             {
-                From = new MailAddress(_smtpSettings.FromEmail, _smtpSettings.FromName),
-                Subject = request.Subject,
-                Body = request.Body,
-                IsBodyHtml = request.IsHtml
+                Credentials = new NetworkCredential(_settings.Username, _settings.Password),
+                EnableSsl = _settings.EnableSsl
             };
 
-            mailMessage.To.Add(request.To);
-            
-            if (!string.IsNullOrEmpty(request.Cc))
-                mailMessage.CC.Add(request.Cc);
-
-            await client.SendMailAsync(mailMessage);
-            
-            _logger.LogInformation("Email sent successfully to {Email} with subject: {Subject}", request.To, request.Subject);
+            await client.SendMailAsync(message, cancellationToken);
+            _logger.LogInformation("E-posta gönderildi: {To}, Konu: {Subject}", to, subject);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to send email to {Email}. Error: {Error}", request.To, ex.Message);
+            _logger.LogError(ex, "E-posta gönderimi başarısız: {To}, Hata: {Error}", to, ex.Message);
             throw;
         }
     }
 
-    public async Task SendPasswordResetEmailAsync(string email, string resetLink)
+    public async Task SendEmailFromTemplateAsync(string to, string templateName, object model, CancellationToken cancellationToken = default)
     {
-        var subject = "Şifre Sıfırlama İsteği - Portfolio CMS";
-        var body = $@"
-            <html>
-            <body>
-                <h2>Şifre Sıfırlama</h2>
-                <p>Merhaba,</p>
-                <p>Şifrenizi sıfırmak için aşağıdaki linke tıklayınız:</p>
-                <a href='{resetLink}'>Şifremi Sıfırla</a>
-                <p>Bu link 1 saat süreyle geçerlidir.</p>
-                <p>Eğer bu isteği siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.</p>
-                <hr/>
-                <p><small>Portfolio CMS - Otomatik Bildirim</small></p>
-            </body>
-            </html>";
-
-        await SendEmailAsync(new EmailRequestDto
-        {
-            To = email,
-            Subject = subject,
-            Body = body,
-            IsHtml = true
-        });
+        // Template sistemi implementasyonu
+        // Razor view engine veya benzeri bir sistem kullanılabilir
+        var body = await RenderTemplateAsync(templateName, model);
+        await SendEmailAsync(to, GetTemplateSubject(templateName), body, cancellationToken);
     }
 
-    public async Task SendContactFormNotificationAsync(Domain.Entities.ContactMessage message)
+    public async Task SendPasswordResetEmailAsync(string to, string token, CancellationToken cancellationToken = default)
     {
-        var subject = $"Yeni İletişim Mesajı: {message.Subject}";
+        var resetLink = $"https://yourdomain.com/reset-password?token={Uri.EscapeDataString(token)}";
         var body = $@"
             <html>
-            <body>
-                <h2>Yeni İletişim Mesajı</h2>
-                <table border='1' cellpadding='5'>
-                    <tr><td><strong>Ad Soyad:</strong></td><td>{message.Name}</td></tr>
-                    <tr><td><strong>E-Posta:</strong></td><td>{message.Email}</td></tr>
-                    <tr><td><strong>Telefon:</strong></td><td>{message.Phone ?? "Belirtilmemiş"}</td></tr>
-                    <tr><td><strong>Konu:</strong></td><td>{message.Subject}</td></tr>
-                    <tr><td><strong>Mesaj:</strong></td><td>{message.MessageBody}</td></tr>
-                    <tr><td><strong>IP Adresi:</strong></td><td>{message.IpAddress}</td></tr>
-                    <tr><td><strong>Tarih:</strong></td><td>{message.CreatedDate:dd.MM.yyyy HH:mm}</td></tr>
-                </table>
-                <hr/>
-                <p><small>Portfolio CMS - Otomatik Bildirim</small></p>
-            </body>
+                <body>
+                    <h2>Şifre Sıfırlama Talebi</h2>
+                    <p>Şifrenizi sıfırlamak için aşağıdaki linke tıklayın:</p>
+                    <a href='{resetLink}'>{resetLink}</a>
+                    <p>Bu link 24 saat geçerlidir.</p>
+                    <p>Eğer bu talebi siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.</p>
+                </body>
             </html>";
 
-        // Send to admin email configured in settings
-        var adminEmail = _configuration["AdminEmail"];
-        if (!string.IsNullOrEmpty(adminEmail))
+        await SendEmailAsync(to, "Şifre Sıfırlama Talebi", body, cancellationToken);
+    }
+
+    public async Task SendWelcomeEmailAsync(string to, string username, CancellationToken cancellationToken = default)
+    {
+        var body = $@"
+            <html>
+                <body>
+                    <h2>Hoş Geldiniz, {username}!</h2>
+                    <p>Portfolio CMS'e hoş geldiniz.</p>
+                    <p>Hesabınız başarıyla oluşturuldu.</p>
+                </body>
+            </html>";
+
+        await SendEmailAsync(to, "Hoş Geldiniz", body, cancellationToken);
+    }
+
+    public async Task SendContactReplyEmailAsync(string to, string subject, string message, CancellationToken cancellationToken = default)
+    {
+        var body = $@"
+            <html>
+                <body>
+                    <h2>İletişim Formu Cevabı</h2>
+                    <p>Konu: {subject}</p>
+                    <p>Mesaj: {message}</p>
+                </body>
+            </html>";
+
+        await SendEmailAsync(to, $"Cevap: {subject}", body, cancellationToken);
+    }
+
+    private Task<string> RenderTemplateAsync(string templateName, object model)
+    {
+        // Template rendering implementasyonu
+        return Task.FromResult($"<html><body>Template: {templateName}</body></html>");
+    }
+
+    private string GetTemplateSubject(string templateName)
+    {
+        return templateName switch
         {
-            await SendEmailAsync(new EmailRequestDto
-            {
-                To = adminEmail,
-                Subject = subject,
-                Body = body,
-                IsHtml = true
-            });
-        }
+            "PasswordReset" => "Şifre Sıfırlama",
+            "Welcome" => "Hoş Geldiniz",
+            "ContactReply" => "İletişim Formu Cevabı",
+            _ => "Bildirim"
+        };
     }
 }
