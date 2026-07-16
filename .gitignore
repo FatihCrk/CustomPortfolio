@@ -1,5 +1,5 @@
-```gitignore
-# Build artifacts
+```
+# Compiled and build artifacts
 *.o
 *.obj
 *.exe
@@ -9,9 +9,14 @@
 *.out
 
 # Dependencies
-packages/
-**/bin/
-**/obj/
+node_modules/
+venv/
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+target/
+.gradle/
 
 # Logs and temp files
 *.log
@@ -21,14 +26,13 @@ packages/
 # Environment
 .env
 .env.local
-*.env.*
+.env.*
 
 # Editors
 .vscode/
 .idea/
-*.userprefs
 
-# OS generated files
-.DS_Store
-Thumbs.db
+# Build outputs
+dist/
+build/
 ```
