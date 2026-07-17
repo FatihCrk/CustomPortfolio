@@ -1,265 +1,288 @@
 # Portfolio CMS - Enterprise Level Content Management System
 
-[![Build Status](https://github.com/FatihCrk/CustomPortfolio/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/FatihCrk/CustomPortfolio/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![.NET 8](https://img.shields.io/badge/.NET-8.0-purple)](https://dotnet.microsoft.com/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com/)
+[![.NET](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
+[![Angular](https://img.shields.io/badge/Angular-19+-red.svg)](https://angular.io/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## 🚀 Features
+## 🎯 Project Overview
 
-### Core Features
-- ✅ **Fully Dynamic CMS** - All content manageable from admin panel
-- ✅ **Multi-Database Support** - PostgreSQL & SQL Server
-- ✅ **Setup Wizard** - One-time initial configuration
-- ✅ **RBAC System** - Super Admin, Admin, Editor, Viewer roles
-- ✅ **JWT Authentication** - With refresh tokens & rotation
-- ✅ **Enterprise Security** - OWASP Top 10 compliant
-- ✅ **Audit Logging** - Complete activity tracking
-- ✅ **Multi-language Ready** - i18n support (TR/EN)
-- ✅ **SEO Optimized** - Meta tags, sitemap, schema.org
-- ✅ **Performance Focused** - Caching, compression, optimization
+Enterprise-level, fully dynamic Portfolio CMS with complete admin panel control. Built with Clean Architecture, SOLID principles, and enterprise security standards.
 
-### Admin Panel Capabilities
-- Dashboard with analytics
-- Profile & user management
-- Content management (Projects, Blog, Skills, Experience, etc.)
-- Media library with file management
-- Contact form management
-- Site settings & theme customization
-- Menu builder
-- Widget system
-- Email template management
-- Webhook configuration
-- Feature flags
-- Backup & restore
-- Revision history
+## ✨ Features
 
-### Security Features
-- BCrypt password hashing
-- CSRF, XSS, SQL Injection protection
-- Rate limiting & brute force protection
-- Account lockout mechanism
-- Token blacklist & revocation
-- Secure headers (CSP, HSTS, etc.)
-- Session management
-- API key management
-- Activity logging
+### Backend (ASP.NET Core 8)
+- ✅ **Clean Architecture** with Domain-Driven Design
+- ✅ **CQRS Pattern** with MediatR
+- ✅ **Repository & Unit of Work** patterns
+- ✅ **JWT Authentication** with Refresh Token rotation
+- ✅ **RBAC** (Role-Based Access Control)
+- ✅ **BCrypt Password Hashing**
+- ✅ **OWASP Top 10** Protection
+- ✅ **Rate Limiting** & Brute Force Protection
+- ✅ **Audit Logging** with IP/Device tracking
+- ✅ **Global Exception Handling**
+- ✅ **FluentValidation**
+- ✅ **AutoMapper**
+- ✅ **Serilog** structured logging
+- ✅ **Swagger/OpenAPI** documentation
+- ✅ **Health Checks**
+- ✅ **MSSQL & PostgreSQL** support
+
+### Frontend (Angular 19+)
+- ✅ **Standalone Components**
+- ✅ **Angular Signals** for reactive state
+- ✅ **Lazy Loading** routes
+- ✅ **Route Guards** for authentication
+- ✅ **Angular Material** UI components
+- ✅ **Responsive Design**
+- ✅ **Dark/Light Theme** support
+- ✅ **SCSS** styling
+- ✅ **HTTP Interceptors**
+- ✅ **Token Management**
+
+### Admin Panel Modules
+- 🔐 **Authentication** (Login, Setup Wizard)
+- 📊 **Dashboard** with statistics
+- 👥 **User Management** (CRUD operations)
+- 📁 **Project Management**
+- 📝 **Blog Management** (Coming soon)
+- 🎯 **Skill Management** (Coming soon)
+- 🏆 **Certificate Management** (Coming soon)
+- 📧 **Message Management** (Coming soon)
+- ⚙️ **Settings** (Coming soon)
 
 ## 🏗️ Architecture
 
 ```
-Portfolio.Api              # Web API Layer
-Portfolio.Application      # Application Logic & DTOs
-Portfolio.Domain          # Domain Entities & Interfaces
-Portfolio.Infrastructure  # External Services
-Portfolio.Persistence     # Data Access Layer
-Portfolio.Shared          # Shared Utilities
+Portfolio CMS
+├── Backend (ASP.NET Core 8)
+│   ├── Portfolio.Api              # API Layer
+│   ├── Portfolio.Application      # Application Logic
+│   ├── Portfolio.Domain          # Domain Entities
+│   ├── Portfolio.Infrastructure  # External Services
+│   ├── Portfolio.Persistence     # Data Access
+│   └── Portfolio.Shared          # Common Utilities
+│
+└── Frontend (Angular 19+)
+    └── portfolio-admin           # Admin Panel
+        ├── src/app/core          # Core modules
+        ├── src/app/features      # Feature modules
+        └── src/app/shared        # Shared components
 ```
 
-### Design Patterns & Principles
-- Clean Architecture
-- SOLID Principles
-- Repository Pattern
-- Unit of Work
-- Dependency Injection
-- CQRS (optional with MediatR)
-
-## 🛠️ Tech Stack
-
-### Backend
-- ASP.NET Core 8 Web API
-- Entity Framework Core 8
-- PostgreSQL / SQL Server
-- JWT Authentication
-- Serilog Logging
-- FluentValidation
-- AutoMapper
-- Hangfire (background jobs)
-
-### Frontend (Coming Soon)
-- Angular 20+
-- Standalone Components
-- Signals
-- Angular Material
-- SCSS
-
-## 📦 Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 - .NET 8 SDK
-- Docker & Docker Compose (optional)
-- PostgreSQL 15+ or SQL Server 2022+
-- Node.js 18+ (for frontend)
+- Node.js 18+
+- MSSQL Server or PostgreSQL
+- Docker (optional)
 
-### Quick Start with Docker
+### Backend Setup
 
+1. **Clone the repository**
 ```bash
-# Clone the repository
 git clone https://github.com/FatihCrk/CustomPortfolio.git
 cd CustomPortfolio
-
-# Copy environment file
-cp .env.example .env
-
-# Update .env with your settings
-
-# Start all services
-docker-compose up --build
-
-# Access the API
-# http://localhost:5000/swagger
 ```
 
-### Manual Setup
+2. **Configure Database**
+Edit `src/Portfolio.Api/appsettings.json`:
 
-#### 1. Database Configuration
-
-**PostgreSQL:**
+**For MSSQL:**
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=PortfolioCMS;Username=postgres;Password=YourPassword"
+    "DefaultConnection": "Server=localhost;Database=PortfolioCMS;User Id=sa;Password=YourPassword;TrustServerCertificate=true;"
   }
 }
 ```
 
-**SQL Server:**
+**For PostgreSQL:**
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=PortfolioCMS;User Id=sa;Password=YourPassword;TrustServerCertificate=true"
+    "DefaultConnection": "Host=localhost;Port=5432;Database=PortfolioCMS;Username=postgres;Password=YourPassword;"
   }
 }
 ```
 
-#### 2. Run Migrations
-
+3. **Run Migrations**
 ```bash
 cd src/Portfolio.Api
-
-# Create migration
-dotnet ef migrations add InitialCreate --project ../Portfolio.Persistence
-
-# Update database
 dotnet ef database update --project ../Portfolio.Persistence
 ```
 
-#### 3. Run the Application
+4. **Start Backend**
+```bash
+dotnet run
+```
+
+Backend will be available at: `https://localhost:7000/swagger`
+
+### Frontend Setup
+
+1. **Navigate to Admin Panel**
+```bash
+cd portfolio-admin
+```
+
+2. **Install Dependencies**
+```bash
+npm install
+```
+
+3. **Start Development Server**
+```bash
+npm start
+```
+
+Frontend will be available at: `http://localhost:4200`
+
+### Docker Setup (Recommended)
 
 ```bash
-# From the API directory
-dotnet run
+# Build and run all services
+docker-compose up --build
 
-# Or from root
-dotnet run --project src/Portfolio.Api
+# Or run in background
+docker-compose up -d
 ```
 
-Access Swagger UI at: `https://localhost:7000/swagger`
+Access points:
+- API: http://localhost:5000/swagger
+- Admin Panel: http://localhost:4200
 
-### First-Time Setup
+## 🔐 Security Features
 
-1. Navigate to `/setup` endpoint
-2. Fill in Super Admin details:
-   - First Name & Last Name
-   - Username
-   - Email
-   - Password
-3. Complete setup wizard
-4. Login with your credentials
+- **Password Policy**: Minimum 8 characters, uppercase, lowercase, number, special character
+- **Account Lockout**: 5 failed attempts = 15 minute lockout
+- **Token Rotation**: Automatic refresh token rotation
+- **Secure Cookies**: HttpOnly, Secure, SameSite=Strict
+- **Security Headers**: CSP, XSS Protection, HSTS
+- **Input Validation**: Server-side validation on all inputs
+- **SQL Injection Protection**: Parameterized queries
+- **Rate Limiting**: Prevents brute force attacks
+- **Audit Logging**: All actions logged with IP and device info
 
-## 📁 Project Structure
+## 📊 Default Roles
 
+| Role | Permissions |
+|------|-------------|
+| **Super Admin** | Full system access |
+| **Admin** | Manage users, content, settings |
+| **Editor** | Create, edit, delete content |
+| **Viewer** | Read-only access |
+
+## 🛠️ Development
+
+### Backend Commands
+
+```bash
+# Add migration
+dotnet ef migrations add MigrationName --project src/Portfolio.Persistence --startup-project src/Portfolio.Api
+
+# Update database
+dotnet ef database update --project src/Portfolio.Persistence --startup-project src/Portfolio.Api
+
+# Run tests
+dotnet test
+
+# Build for production
+dotnet build --configuration Release
 ```
-/workspace
-├── src/
-│   ├── Portfolio.Api/           # API endpoints, controllers
-│   ├── Portfolio.Application/   # Business logic, DTOs, validators
-│   ├── Portfolio.Domain/        # Entities, enums, interfaces
-│   ├── Portfolio.Infrastructure/# Services (Auth, Email, Cache, etc.)
-│   ├── Portfolio.Persistence/   # DbContext, repositories, migrations
-│   └── Portfolio.Shared/        # Common utilities, exceptions
-├── docker-compose.yml           # Docker orchestration
-├── Dockerfile                   # Container build instructions
-├── .env.example                 # Environment variables template
-├── .github/workflows/           # CI/CD pipelines
-└── README.md                    # This file
+
+### Frontend Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+
+# Build for production
+npm run build
+
+# Run tests
+npm test
+
+# Lint code
+npm run lint
 ```
 
-## 🔐 Security Best Practices Implemented
+## 📦 API Endpoints
 
-- ✅ Password hashing with BCrypt
-- ✅ JWT with secure cookie storage
-- ✅ Refresh token rotation
-- ✅ Rate limiting per IP
-- ✅ Input validation & output encoding
-- ✅ Parameterized queries (EF Core)
-- ✅ Security headers (CSP, X-XSS, HSTS, etc.)
-- ✅ Audit logging for all operations
-- ✅ Brute force protection
-- ✅ Account lockout after failed attempts
-- ✅ Token blacklist support
+### Authentication
+- `POST /api/auth/setup` - Initial setup (one-time)
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+- `POST /api/auth/logout-all` - Logout from all devices
+- `POST /api/auth/refresh-token` - Refresh access token
+- `GET /api/auth/setup-status` - Check setup status
 
-## 📊 Monitoring & Logging
+### Users
+- `GET /api/users` - Get all users
+- `GET /api/users/{id}` - Get user by ID
+- `POST /api/users` - Create user
+- `PUT /api/users/{id}` - Update user
+- `DELETE /api/users/{id}` - Delete user
 
-- **Serilog** for structured logging
-- Console & File sinks configured
-- Activity logs stored in database
-- Health check endpoint: `/health`
-- Metrics ready for Prometheus/Grafana
+### Projects
+- `GET /api/projects` - Get all projects (public)
+- `GET /api/projects/{id}` - Get project by ID (public)
+- `POST /api/projects` - Create project (Editor+)
+- `PUT /api/projects/{id}` - Update project (Editor+)
+- `DELETE /api/projects/{id}` - Delete project (Admin+)
+
+## 🌍 Environment Variables
+
+Create `.env` file in root directory:
+
+```env
+# Database
+DB_PROVIDER=mssql
+CONNECTION_STRING=Server=localhost;Database=PortfolioCMS;...
+
+# JWT Settings
+JWT_SECRET=your-super-secret-key-min-32-chars
+JWT_ISSUER=PortfolioCMS
+JWT_AUDIENCE=PortfolioCMSUsers
+ACCESS_TOKEN_EXPIRY_MINUTES=60
+REFRESH_TOKEN_EXPIRY_DAYS=7
+
+# Email (Optional)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-password
+
+# Redis (Optional)
+REDIS_CONNECTION=localhost:6379
+```
+
+## 📈 Performance Optimization
+
+- Server-side caching with Redis
+- Response compression
+- Image optimization (WebP)
+- Lazy loading in Angular
+- Bundle minification
+- CDN ready architecture
+- Virtual scrolling for large lists
+- Pagination support
 
 ## 🧪 Testing
 
 ```bash
-# Run all tests
+# Backend tests
+cd src/Portfolio.Tests
 dotnet test
 
-# Run with coverage
-dotnet test /p:CollectCoverage=true
-
-# Run specific test project
-dotnet test src/Portfolio.Tests
+# Frontend tests
+cd portfolio-admin
+npm test
 ```
-
-## 🚀 Deployment
-
-### Docker Production Deployment
-
-```bash
-# Build production image
-docker build -t portfolio-cms:latest .
-
-# Run with production settings
-docker run -d \
-  -p 8080:8080 \
-  -e ASPNETCORE_ENVIRONMENT=Production \
-  -e ConnectionStrings__DefaultConnection="your-connection-string" \
-  portfolio-cms:latest
-```
-
-### Environment Variables
-
-See `.env.example` for all available configuration options:
-- Database connection
-- JWT settings
-- SMTP configuration
-- File upload limits
-- Security settings
-- Logging levels
-
-## 📝 API Documentation
-
-Once running, access:
-- **Swagger UI**: `http://localhost:5000/swagger`
-- **OpenAPI Spec**: `http://localhost:5000/swagger/v1/swagger.json`
-- **Health Check**: `http://localhost:5000/health`
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## 📄 License
 
@@ -268,16 +291,26 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **Fatih Crk**
-
 - GitHub: [@FatihCrk](https://github.com/FatihCrk)
-- Project: [CustomPortfolio](https://github.com/FatihCrk/CustomPortfolio)
+- Repository: [CustomPortfolio](https://github.com/FatihCrk/CustomPortfolio)
 
-## 🙏 Acknowledgments
+## 🤝 Contributing
 
-- .NET Team for ASP.NET Core
-- EF Core Team
-- All open-source contributors
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📞 Support
+
+For issues and questions:
+- Create an issue on GitHub
+- Check existing documentation
+- Review API Swagger documentation
 
 ---
 
-**Made with ❤️ using .NET 8**
+**Built with ❤️ using ASP.NET Core 8 & Angular 19+**
