@@ -1,0 +1,89 @@
+name: Portfolio CMS CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  NODE_VERSION: '20.x'
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore dependencies
+      run: dotnet restore src/Portfolio.Api/Portfolio.Api.csproj
+    
+    - name: Build
+      run: dotnet build src/Portfolio.Api/Portfolio.Api.csproj --no-restore --configuration Release
+    
+    - name: Run tests
+      run: dotnet test --no-build --verbosity normal --configuration Release
+    
+    - name: Security scan (dotnet-outdated)
+      run: |
+        dotnet tool install -g dotnet-outdated-tool
+        dotnet outdated src/Portfolio.Api/Portfolio.Api.csproj
+    
+    - name: Code analysis
+      run: dotnet analyze src/Portfolio.Api/Portfolio.Api.csproj
+
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Build Docker image
+      run: docker build -t portfolio-cms:${{ github.sha }} .
+    
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: portfolio-cms:${{ github.sha }}
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build-and-test, docker-build]
+    if: github.ref == 'refs/heads/develop'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy to staging (placeholder)
+      run: echo "Deploy to staging environment"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build-and-test, docker-build]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy to production (placeholder)
+      run: echo "Deploy to production environment"

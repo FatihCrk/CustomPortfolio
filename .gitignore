@@ -1,89 +1,98 @@
-```
-# Environment
-.env
-.env.local
-.env.*
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
 
-# Logs
-*.log
-
-# Dependencies
-node_modules/
-vendor/
-
-# Build outputs
-bin/
-obj/
-out/
-dist/
-build/
-target/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Python (if applicable)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git/
-.mypy_cache/
-.pytest_cache/
-.hypothesis/
-
-# Dotnet specific
-**/bin/
-**/obj/
-**/out/
-**/[Dd]ebug/
-**/[Dd]ebugPublic/
-**/[Rr]elease/
-**/[Rr]eleases/
-**/x64/
-**/x86/
-**/build/
-**/bld/
-**/[Bb]in/
-**/[Oo]bj/
-**/[Ll]og/
-**/[Ll]ogs/
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
 *.sln.docstates
+*.userprefs
+
+# Visual Studio Code
+.vscode/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# User-specific files
+*.rsuser
+*.suo
 *.user
 *.userosscache
-*.suo
-*.csproj.user
-*.vbproj.user
-*.userprefs
-**/appdata/
-**/AppData/
-**/packages/
-**/Packages/
-**/node_modules/
-**/.vs/
-**/.sonarqube/
-**/.idea/
-**/*.VC.db
-**/*.VC.VC.opendb
-```
+*.sln.docstates
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Mac files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Docker
+docker-compose.override.yml
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Uploads
+uploads/
+wwwroot/uploads/
+
+# Database files (SQLite)
+*.db
+*.sqlite
+*.sqlite3
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Backup files
+*.bak
+*.backup
+
+# Node.js (if frontend is added)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Angular
+dist/
+.angular/
