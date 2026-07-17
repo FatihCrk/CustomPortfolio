@@ -1,27 +1,21 @@
 ```
-# Compiled and build artifacts
-*.o
-*.obj
-*.exe
+# Build artifacts
+bin/
+obj/
 *.dll
-*.so
-*.a
-*.out
+*.exe
+*.pdb
+*.runtimeconfig.dev.json
 
 # Dependencies
+packages/
 node_modules/
-venv/
-.venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-target/
-.gradle/
+.nuget/
+.nyc_output/
+coverage/
 
-# Logs and temp files
+# Logs
 *.log
-*.tmp
-*.swp
 
 # Environment
 .env
@@ -31,8 +25,10 @@ target/
 # Editors
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Build outputs
-dist/
-build/
+# OS
+.DS_Store
+Thumbs.db
 ```
