@@ -1,28 +1,25 @@
 ```
-# Build artifacts
-bin/
-obj/
-*.dll
-*.exe
-*.pdb
-*.runtimeconfig.dev.json
-
-# Dependencies
-packages/
-node_modules/
-.nuget/
-.nyc_output/
-coverage/
-
-# Logs
-*.log
-
 # Environment
 .env
 .env.local
 .env.*
 
-# Editors
+# Logs
+*.log
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+bin/
+obj/
+out/
+dist/
+build/
+target/
+
+# IDE
 .vscode/
 .idea/
 *.swp
@@ -31,4 +28,62 @@ coverage/
 # OS
 .DS_Store
 Thumbs.db
+
+# Python (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git/
+.mypy_cache/
+.pytest_cache/
+.hypothesis/
+
+# Dotnet specific
+**/bin/
+**/obj/
+**/out/
+**/[Dd]ebug/
+**/[Dd]ebugPublic/
+**/[Rr]elease/
+**/[Rr]eleases/
+**/x64/
+**/x86/
+**/build/
+**/bld/
+**/[Bb]in/
+**/[Oo]bj/
+**/[Ll]og/
+**/[Ll]ogs/
+*.sln.docstates
+*.user
+*.userosscache
+*.suo
+*.csproj.user
+*.vbproj.user
+*.userprefs
+**/appdata/
+**/AppData/
+**/packages/
+**/Packages/
+**/node_modules/
+**/.vs/
+**/.sonarqube/
+**/.idea/
+**/*.VC.db
+**/*.VC.VC.opendb
 ```
