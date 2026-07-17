@@ -45,10 +45,12 @@ public class ApplicationDbContext : DbContext
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<ProjectImage> ProjectImages => Set<ProjectImage>();
     public DbSet<ProjectTechnology> ProjectTechnologies => Set<ProjectTechnology>();
+    public DbSet<ProjectTag> ProjectTags => Set<ProjectTag>();
     public DbSet<Certificate> Certificates => Set<Certificate>();
     public DbSet<Testimonial> Testimonials => Set<Testimonial>();
     public DbSet<BlogCategory> BlogCategories => Set<BlogCategory>();
     public DbSet<BlogPost> BlogPosts => Set<BlogPost>();
+    public DbSet<BlogTag> BlogTags => Set<BlogTag>();
     public DbSet<BlogComment> BlogComments => Set<BlogComment>();
     public DbSet<Service> Services => Set<Service>();
     public DbSet<ContactInfo> ContactInfos => Set<ContactInfo>();
@@ -66,6 +68,10 @@ public class ApplicationDbContext : DbContext
     public DbSet<FeatureFlag> FeatureFlags => Set<FeatureFlag>();
     public DbSet<Backup> Backups => Set<Backup>();
     public DbSet<ContentRevision> ContentRevisions => Set<ContentRevision>();
+    public DbSet<Language> Languages => Set<Language>();
+    public DbSet<HomePageContent> HomePageContents => Set<HomePageContent>();
+    public DbSet<VisitorAnalytics> VisitorAnalytics => Set<VisitorAnalytics>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     #endregion
 

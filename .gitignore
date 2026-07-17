@@ -1,98 +1,44 @@
-# Build results
-[Dd]ebug/
-[Rr]elease/
-x64/
-x86/
-[Ww][Ii][Nn]32/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
+```
+# Build artifacts
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
+bin/
+obj/
+out/
 
-# Visual Studio files
-.vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-*.userprefs
-
-# Visual Studio Code
-.vscode/
-
-# JetBrains Rider
-.idea/
-*.sln.iml
-
-# User-specific files
-*.rsuser
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# Mono Auto Generated Files
-mono_crash.*
-
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Mac files
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# NuGet Packages
-*.nupkg
-*.snupkg
-.nuget/
+# Dependencies
 packages/
+node_modules/
+vendor/
 
-# .NET Core
-project.lock.json
-project.fragment.lock.json
-artifacts/
+# Logs
+*.log
 
-# Docker
-docker-compose.override.yml
-
-# Environment files
+# Environment
 .env
 .env.local
-.env.*.local
+*.env.*
 
-# Uploads
-uploads/
-wwwroot/uploads/
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Database files (SQLite)
-*.db
-*.sqlite
-*.sqlite3
+# OS
+.DS_Store
+Thumbs.db
 
-# Test results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
+# Tests and coverage
+coverage/
+htmlcov/
+*.coverage
 
-# Backup files
-*.bak
-*.backup
-
-# Node.js (if frontend is added)
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# Angular
-dist/
-.angular/
+# Temporary files
+*.tmp
+*.temp
+```
