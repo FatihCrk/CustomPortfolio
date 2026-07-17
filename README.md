@@ -27,7 +27,7 @@ frontend/
 ### Backend
 - ASP.NET Core 8 Web API
 - Entity Framework Core 8
-- PostgreSQL
+- **PostgreSQL** ve **Microsoft SQL Server** desteği
 - JWT Authentication + Refresh Token
 - BCrypt Password Hash
 - FluentValidation
@@ -35,6 +35,28 @@ frontend/
 - MediatR (CQRS)
 - Serilog
 - Redis Cache
+
+### Veritabanı Desteği
+
+Proje hem **PostgreSQL** hem de **Microsoft SQL Server** veritabanlarını destekler. Kullanılacak veritabanı sağlayıcısı `appsettings.json` dosyasındaki connection string ile belirlenir.
+
+#### PostgreSQL Connection String Örneği
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=PortfolioCMS;Username=postgres;Password=YourPassword;"
+  }
+}
+```
+
+#### MSSQL Connection String Örneği
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=PortfolioCMS;User Id=sa;Password=YourPassword;TrustServerCertificate=true;"
+  }
+}
+```
 
 ### Frontend
 - Angular 20+
@@ -148,16 +170,20 @@ cd src
 # Veritabanı bağlantı string'i ayarla
 # appsettings.json veya environment variables
 
-# Migration oluştur
-dotnet ef migrations add InitialCreate --project Portfolio.Persistence --startup-project Portfolio.Api
+# PostgreSQL için migration oluştur ve uygula
+dotnet ef migrations add InitialCreate_Postgres --project Portfolio.Persistence --startup-project Portfolio.Api
+dotnet ef database update --project Portfolio.Persistence --startup-project Portfolio.Api
 
-# Migration uygula
+# VEYA Microsoft SQL Server için migration oluştur ve uygula
+dotnet ef migrations add InitialCreate_MsSql --project Portfolio.Persistence --startup-project Portfolio.Api
 dotnet ef database update --project Portfolio.Persistence --startup-project Portfolio.Api
 
 # API'yi çalıştır
 cd Portfolio.Api
 dotnet run
 ```
+
+**Not:** Migration isimlerini farklı vererek her iki veritabanı tipi için ayrı migration dosyaları oluşturabilirsiniz. Varsayılan olarak son eklenen migration kullanılır.
 
 ### Frontend Kurulum
 
@@ -237,6 +263,8 @@ ng serve
 - [x] Generic Repository Implementation
 - [x] Unit of Work Implementation
 - [x] Solution ve Project dosyaları
+- [x] **PostgreSQL ve Microsoft SQL Server veritabanı desteği**
+- [x] **Health Checks for MSSQL**
 
 ## 🔄 Devam Eden/Sıradaki İşlemler
 
